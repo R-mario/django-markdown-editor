@@ -31,17 +31,14 @@ blocks:
       jobs:
         - name: Test
           commands:
-            - python martor_demo/manage.py test
-  - name: 'Block #3'
-    task:
-      jobs:
-        - name: Checklist
+            - cd martor_demo
+            - python manage.py makemigrations
+            - python manage.py migrate
+            - python manage.py test
+        - name: deploy checklist
           commands:
             - cd martor_demo
             - python manage.py check --deploy
-  - name: 'Block #4'
-    task:
-      jobs:
         - name: style check
           commands:
             - pip install flake8
