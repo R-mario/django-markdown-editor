@@ -16,3 +16,33 @@ blocks:
             - cache restore
             - pip install --cache-dir .pip_cache -r requirements.txt
             - cache store
+  - name: 'Block #2'
+    task:
+      prologue:
+        commands:
+          - sem-version python 3.11
+          - checkout
+          - cache restore
+          - pip install --cache-dir .pip_cache -r requirements.txt
+          - cd martor_demo
+          - python manage.py makemigrations
+          - python manage.py migrate
+          - python manage.py test
+      jobs:
+        - name: Test
+          commands:
+            - python martor_demo/manage.py test
+  - name: 'Block #3'
+    task:
+      jobs:
+        - name: Checklist
+          commands:
+            - cd martor_demo
+            - python manage.py check --deploy
+  - name: 'Block #4'
+    task:
+      jobs:
+        - name: style check
+          commands:
+            - pip install flake8
+            - flake8 martor_demo/ --max-line-length=127
